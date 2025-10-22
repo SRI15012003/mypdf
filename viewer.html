@@ -7,24 +7,26 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="viewer-page">
+
   <div class="viewer-header">
     <button onclick="goHome()">🏠 Home</button>
-    <h2 id="pdfTitle">PDF Viewer</h2>
+    <h2 id="pdfTitle">Flipbook Viewer</h2>
   </div>
-  <iframe id="pdfFrame" src="" width="100%" height="90%"></iframe>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const pdfFile = urlParams.get('file');
-    if (pdfFile) {
-      document.getElementById('pdfFrame').src = "pdfs/" + pdfFile;
-      document.getElementById('pdfTitle').innerText = pdfFile;
-    }
+  <div class="pdf-container">
+    <!-- Heyzine Flipbook iframe -->
+    <iframe allowfullscreen="" allow="clipboard-write" scrolling="no" class="fp-iframe" 
+      style="border: 1px solid lightgray; width: 100%; height: 600px;" 
+      src="https://heyzine.com/flip-book/019a007614.html">
+    </iframe>
+  </div>
 
-    function goHome() {
-      window.location.href = "home.html";
-    }
-  </script>
+<script>
+function goHome() {
+  window.location.href = "home.html";
+}
+</script>
+
 </body>
 </html>
 
