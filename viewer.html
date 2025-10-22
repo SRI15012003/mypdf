@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>View PDF</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Viewer</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="pdf-container">
-    <iframe id="pdfFrame" width="100%" height="600px"></iframe>
-  </div>
-  <div class="controls">
+<body class="viewer-page">
+  <div class="viewer-header">
     <button onclick="goHome()">🏠 Home</button>
+    <h2 id="pdfTitle">PDF Viewer</h2>
   </div>
+  <iframe id="pdfFrame" src="" width="100%" height="90%"></iframe>
 
-<script>
-const urlParams = new URLSearchParams(window.location.search);
-const file = urlParams.get('file');
-document.getElementById('pdfFrame').src = `pdfs/${file}`;
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const pdfFile = urlParams.get('file');
+    if (pdfFile) {
+      document.getElementById('pdfFrame').src = "./pdfs/" + pdfFile;
+      document.getElementById('pdfTitle').innerText = pdfFile;
+    }
 
-function goHome() {
-  window.location.href = "home.html";
-}
-</script>
+    function goHome() {
+      window.location.href = "home.html";
+    }
+  </script>
 </body>
 </html>
