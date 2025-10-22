@@ -1,29 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDF Viewer</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.min.js"></script>
 </head>
 <body class="viewer-page">
+
   <div class="viewer-header">
     <button onclick="goHome()">🏠 Home</button>
     <h2 id="pdfTitle">PDF Viewer</h2>
   </div>
-  <iframe id="pdfFrame" src="" width="100%" height="90%"></iframe>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const pdfFile = urlParams.get('file');
-    if (pdfFile) {
-      document.getElementById('pdfFrame').src = "./pdfs/" + pdfFile;
-      document.getElementById('pdfTitle').innerText = pdfFile;
-    }
+  <div class="pdf-container">
+    <canvas id="pdf-canvas"></canvas>
+  </div>
 
-    function goHome() {
-      window.location.href = "home.html";
-    }
-  </script>
+  <div class="pdf-controls">
+    <button id="prev-page">Previous</button>
+    <span>Page: <span id="page-num">1</span> / <span id="page-count">1</span></span>
+    <button id="next-page">Next</button>
+  </div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const pdfFile = urlParams.get('file');
+
+if (!pdfFile) {
+  alert("No PDF file selected");
+  window.location.href = "home.html";
+}
+
+document.getElementById('pdfTitle').innerText = pdfFile;
+
+// PDF.js setup
+let pdfDoc = null,
+    pageNum = 1,
+    pageRendering = false,
+    pageNumPending = null;
+
+const canvas = document.getElementById('pdf-canvas');
+const ctx = canvas.getContext('2d');
+
+function renderPage(num) {
+  pageRendering = true;
+  pdfDoc.getPage(num).then(function(page) {
+    const viewport = page.getViewport({ scale: 1.5 });
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
+    };
+    const renderTask = page.render(renderContext);
+
+    renderTask.promise.then(function() {
+      pageRendering = false;
+      if (pageNumPending !== null) {
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
+    });
+
+    document.getElementById('page-num').textContent = num;
+  });
+}
+
+function queueRenderPage(num) {
+  if (pageRendering) {
+    pageNumPending = num;
+  } else {
+    renderPage(num);
+  }
+}
+
+function onPrevPage() {
+  if (pageNum <= 1) return;
+  pageNum--;
+  queueRenderPage(pageNum);
+}
+
+function onNextPage() {
+  if (pageNum >= pdfDoc.numPages) return;
+  pageNum++;
+  queueRenderPage(pageNum);
+}
+
+document.getElementById('prev-page').addEventListener('click', onPrevPage);
+document.getElementById('next-page').addEventListener('click', onNextPage);
+
+// Load PDF
+pdfjsLib.getDocument("./pdfs/" + pdfFile).promise.then(function(pdfDoc_) {
+  pdfDoc = pdfDoc_;
+  document.getElementById('page-count').textContent = pdfDoc.numPages;
+  renderPage(pageNum);
+});
+
+function goHome() {
+  window.location.href = "home.html";
+}
+</script>
 </body>
 </html>
