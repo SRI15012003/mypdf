@@ -1,41 +1,31 @@
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #f4f4f4;
 }
 
 /* Logo Page */
 .logo-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   background: linear-gradient(135deg, #3b82f6, #9333ea);
 }
-.logo-container {
-  text-align: center;
-}
-.logo {
+.logo-container img {
   width: 200px;
-  animation: fadeIn 2s ease-in-out;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 /* Home Page */
 .home-title {
-  position: absolute;
-  top: 20px;
   text-align: center;
+  margin-top: 20px;
 }
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   width: 80%;
-  margin-top: 80px;
+  margin: 40px auto;
 }
 .grid-item {
   background: white;
@@ -56,18 +46,22 @@ button:hover {
   background: #1d4ed8;
 }
 
-/* PDF Viewer */
-.viewer-page {
-  flex-direction: column;
-}
+/* Viewer Page */
 .viewer-header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background: #2563eb;
   color: white;
   padding: 10px 20px;
 }
-iframe {
-  border: none;
+.pdf-container {
+  text-align: center;
+  margin: 20px;
 }
+.fp-iframe {
+  width: 100%;
+  height: 600px;
+  border: 1px solid lightgray;
+}
+
